@@ -1,3 +1,5 @@
+-- Movements
+
 local Vec2 = {}
 
 function Vec2:new(x, y)
@@ -13,7 +15,7 @@ function Vec2:new(x, y)
 	end
 
 	return vec2
-	
+
 end
 
 

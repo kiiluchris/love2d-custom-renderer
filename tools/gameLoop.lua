@@ -9,7 +9,7 @@ function GameLoop:create()
 	gameLoop.tickers = {}
 
 
-	function gameLoop:addGameLoop(obj)
+	function gameLoop:addLoop(obj)
 		insert(self.tickers, obj)
 	end
 
