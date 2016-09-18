@@ -1,6 +1,15 @@
+local GameLoop = require("/tools/gameLoop")
 local Renderer = require("/tools/renderer")
 
+gameLoop = GameLoop:create()
 renderer = Renderer:create()
+
+g_WindowWidth   = love.graphics.getWidth()
+g_WindowHeight  = love.graphics.getHeight()
+
+g_GameTime = 0
+
+
 
 function createBox(x, y, l)
 	local box = {
@@ -20,16 +29,29 @@ function createBox(x, y, l)
 	return box
 end
 
+function updateTimer()
+	local ticker = {}
+
+	function ticker:load()
+		gameLoop:addGameLoop(self)
+
+	end
+
+	function ticker:tick( dt )
+		print(dt, math.random())
+	end
+
+	return ticker
+
+end
 function love.load()
-	r1 = createBox(64,64)
-	r2 = createBox(96,96)
-	r1:load()
-	r2:load()
+	obj = updateTimer()
+	obj:load()
 end
 
 function love.update(dt)
-
-
+	g_GameTime = g_GameTime + dt
+	gameLoop:update(dt)
 end
 
 function love.draw()
