@@ -25,7 +25,7 @@ end
 
 function Tlm:load()
 	self.tiles = {}
-	self.img = love.graphics.newImage("/assets/images/bg6.png")
+	self.img = asm:get("background")
 	self.img:setFilter("nearest", "nearest")
 
 	renderer:addRenderer(self)
