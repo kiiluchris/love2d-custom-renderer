@@ -1,3 +1,5 @@
+local vec2 = require("tools/vector2")
+
 local Tlm = {}
 
 local quad = love.graphics.newQuad
@@ -12,12 +14,11 @@ local quads = {
 	quad(140,500,16,16,1280,720),
 	quad(160,600,16,16,1280,720),
 }
-
-function tile( x,y,w,h, quad)
+function tile(x,y,w,h,quad)
 	local tile = {}
 
-	tile.pos = require("/tools/vector2"):new(x, y)
-	tile.size = require("/tools/vector2"):new(w, h)
+	tile.pos = vec2:new(x,y)
+	tile.size = vec2:new(w,h)
 	tile.quad = quad
 
 	return tile
@@ -26,46 +27,62 @@ end
 function Tlm:load()
 	self.tiles = {}
 	self.img = asm:get("background")
-	self.img:setFilter("nearest", "nearest")
+	self.img:setFilter("nearest","nearest")
 
 	renderer:addRenderer(self)
 end
 
 function Tlm:draw()
-	for i = 1, #self.tiles do
-		for j = 1, #self.tiles[i] do
-			if self.tiles[i][j] ~= nil then 
-				local tile = self.tiles[i][j]
-				love.graphics.draw(self.img, tile.quad, tile.pos.x, tile.pos.y)
+
+	for layer = 1,#self.tiles do
+		for i = 1,64 do
+			for j = 1,64 do 
+
+				if self.tiles[layer][i][j] ~= nil then
+					local tile = self.tiles[layer][i][j]
+					love.graphics.draw(self.img,tile.quad,tile.pos.x,tile.pos.y)
+				end
+
 			end
 		end
 	end
 end
 
 function Tlm:loadmap(mapname)
-	local map = require("assets/maps/" .. mapname)
+	local map = require ("assets/maps/"..mapname)
 
-	for i = 1, map.height do
-		self.tiles[i] = {} 
+	for layer = 1,#map.layers do
+		self.tiles[layer] = {}
+		for i = 1,map.height do
+			self.tiles[layer][i] = {}
+		end
 	end
 
-	for layer = 1, #map.layers do
+	for layer = 1,#map.layers do
 		local data = map.layers[layer].data
-		local properties = map.layers[layer].properties
+		local prop = map.layers[layer].prop
 
-		for y = 1, map.height do
-			for x = 1, map.width do
-				local index = (y * map.height + (x + 1) - map.width)  + 1
+		for y = 1,map.height do
+			for x = 1,map.width do
+
+				local index = (y*map.height +(x-1)-map.width)+1
+
 				if data[index] ~= 0 then
-						local q = quads[math.random(1,8)]
-						self.tiles[y][x] = tile(16 * x -16, 16 * y - 16, 16, 16, q)
+
+					local q = quads[math.random(8)]
+					print(data[index])
+					self.tiles[layer][y][x] = tile(16*x-16,16*y-16,16,16,q)
+
 				end
+
 			end
 		end
 	end
+
 end
 
 function Tlm:destroy()
+
 end
 
 return Tlm

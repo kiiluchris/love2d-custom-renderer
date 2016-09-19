@@ -9,7 +9,7 @@ function Entity:new(x, y, w, h, img, quad, id)
 	entity.velocity = vec2:new(0, 0)
 	entity.direction = vec2:new(0, 0)
 	entity.speed = vec2:new(0, 0)
-	entity.id = id
+	entity.id = id or "entity"
 
 	entity.remove = false
 
